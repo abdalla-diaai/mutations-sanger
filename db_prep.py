@@ -2,18 +2,10 @@ import polars as ps
 import sqlite3
 import pandas as pd
 
-# model and profiles tables
-# model = ps.read_csv("db/model_list_latest.csv")
-
-# model.write_database(
-#   "Model",
-#   "sqlite:///db/ccle.db",
-#   if_table_exists = "replace",
-#   engine = "adbc",
-# )
 
 # somatic mutations table
 csv = ps.read_csv("db/mutations_all_latest.csv")
+csv = csv.filter(ps.col("effect") != "intronic")
 columns_to_keep = ["model_id", "gene_symbol", "ensembl_gene_id", "model_name", "cdna_mutation", "protein_mutation","type", "effect", "vaf", "data_type"]
 
 csv = csv.select(columns_to_keep)
