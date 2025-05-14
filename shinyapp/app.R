@@ -37,7 +37,8 @@ ui <- fluidPage(useShinyjs(),
                   # Application title
                   titlePanel("Somatic Mutations in Cancer Cell Lines"),
                   p(
-                    "This tool output a table with cancer cell lines that contain specific mutations in any gene of interest. The dataset is downloaded from DepMap Public 24Q4 `OmicsSomaticMutations`. MAF-like formatted file containing information on all the somatic point mutations and indels called in the DepMap cell lines. Calls are generated from Mutect2."),
+                    "This tool output a table with cancer cell lines that contain specific mutations in any gene of interest. The dataset, which contain all mutations present in all sequenced models,
+ is downloaded from ``cellmodelpassports``."),
 
                   tagList(
                     p(strong("Steps:")),
