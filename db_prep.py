@@ -3,14 +3,14 @@ import sqlite3
 import pandas as pd
 
 # model and profiles tables
-model = ps.read_csv("db/model_list_latest.csv")
+# model = ps.read_csv("db/model_list_latest.csv")
 
-model.write_database(
-  "Model",
-  "sqlite:///db/ccle.db",
-  if_table_exists = "replace",
-  engine = "adbc",
-)
+# model.write_database(
+#   "Model",
+#   "sqlite:///db/ccle.db",
+#   if_table_exists = "replace",
+#   engine = "adbc",
+# )
 
 # somatic mutations table
 csv = ps.read_csv("db/mutations_all_latest.csv")
@@ -30,7 +30,7 @@ def get_column_values(df, column1):
   return (df[column1]).to_list()
 
 
-gene_names = get_column_values(csv, "HugoSymbol")
+gene_names = get_column_values(csv, "gene_symbol")
 
 # convert to dataframe
 g2t = ps.DataFrame(
@@ -54,8 +54,7 @@ con.execute("ANALYZE;")
 con.execute("VACUUM;")
 # Index columns
 con.execute("CREATE INDEX ix_gt_gene ON Genes(Gene)")
-con.execute("CREATE INDEX ix_mod_profile ON Model(ProfileID)")
-con.execute("CREATE INDEX ix_mod_cln ON Model(CellLineName)")
+con.execute("CREATE INDEX ix_mod_profile ON SomaticMutations(model_name)")
 
 # Create views
 con.execute(
@@ -63,6 +62,14 @@ con.execute(
   CREATE VIEW view_unique_genes
   AS
     SELECT DISTINCT Gene FROM Genes ORDER BY Gene
+  """
+)
+
+con.execute(
+  """
+  CREATE VIEW view_unique_cellLines
+  AS
+    SELECT DISTINCT model_name FROM SomaticMutations ORDER BY model_name
   """
 )
 
